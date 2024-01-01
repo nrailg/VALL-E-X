@@ -37,6 +37,7 @@ url = 'https://huggingface.co/Plachta/VALL-E-X/resolve/main/vallex-checkpoint.pt
 checkpoints_dir = "./checkpoints/"
 
 model_checkpoint_name = "vallex-checkpoint.pt"
+vocos_checkpoint_name = "vocos-encodec-24khz"
 
 model = None
 
@@ -84,9 +85,13 @@ def preload_models():
     model.eval()
 
     # Encodec
-    codec = AudioTokenizer(device)
-    
-    vocos = Vocos.from_pretrained('charactr/vocos-encodec-24khz').to(device)
+    codec = AudioTokenizer(device=device, repo=checkpoints_dir)
+
+    vocos_checkpoint_path = os.path.join(checkpoints_dir,
+                                         vocos_checkpoint_name)
+    vocos = Vocos.from_pretrained(
+        vocos_checkpoint_path,
+        feature_extractor_repo=checkpoints_dir).to(device)
 
 @torch.no_grad()
 def generate_audio(text, prompt=None, language='auto', accent='no-accent'):

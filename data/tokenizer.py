@@ -16,6 +16,7 @@
 import re
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List, Optional, Pattern, Union
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -66,9 +67,13 @@ class AudioTokenizer:
     def __init__(
         self,
         device: Any = None,
+        repo: Optional[Path] = None,
     ) -> None:
         # Instantiate a pretrained EnCodec model
-        model = EncodecModel.encodec_model_24khz()
+        if repo is not None:
+            repo = Path(repo)
+        model = EncodecModel.encodec_model_24khz(pretrained=True,
+                                                 repository=repo)
         model.set_target_bandwidth(6.0)
         remove_encodec_weight_norm(model)
 

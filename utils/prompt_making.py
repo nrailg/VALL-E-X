@@ -24,7 +24,8 @@ if torch.cuda.is_available():
     device = torch.device("cuda", 0)
 if torch.backends.mps.is_available():
     device = torch.device("mps")
-codec = AudioTokenizer(device)
+checkpoints_dir = "./checkpoints/"
+codec = AudioTokenizer(device=device, repo=checkpoints_dir)
 
 if not os.path.exists("./whisper/"): os.mkdir("./whisper/")
 whisper_model = None
